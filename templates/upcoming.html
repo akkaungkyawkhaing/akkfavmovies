@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+
+    {% block title %} <title>Upcoming</title> {% endblock %}
+
+	{% block header %}
+		{% include 'header.html' %}
+	{% endblock %}
+
+
+{% block content %}
+
+<!-- start page title -->
+	<section class="section section--first section--bg" data-bg="static/img/home/home__bg3.jpg">
+
+		<div class="container">
+
+			<div class="row">
+
+				<div class="col-12">
+
+					<div class="section__wrap">
+
+						<h1 class="home__title"><b>UPCOMING</b> MOVIES</h1>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</section>
+<!-- end page title -->
+
+
+<!-- filter -->
+	<div class="filter">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="filter__content">
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- end filter -->
+
+
+	<!-- catalog -->
+	<div class="catalog">
+
+		<div class="container">
+
+			<div class="row">
+
+				{% for movie in all_movie %}
+
+				<!-- card -->
+				<div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+
+					<div class="card">
+
+						<div class="card__cover">
+
+							<img src="{{ img_url ~ movie.poster_path }}" alt="">
+
+							<a href="{{ url_for('details', id=movie.id) }}" class="card__play"><i class="icon ion-ios-play"></i></a>
+
+						</div>
+
+						<div class="card__content">
+
+							<h3 class="card__title">
+
+								<a href="{{ url_for('details', id=movie.id) }}">{{ movie.title }}</a>
+							</h3>
+
+							<span class="card__category">
+
+								<a href="{{ url_for('details', id=movie.id) }}">{{ movie.release_date }} ({{ movie.original_language }})</a>
+
+							</span>
+
+							<span class="card__rate">
+                              <i class="icon ion-ios-star"></i>{{ movie.vote_average }}
+                            </span>
+
+						</div>
+
+					</div>
+
+				</div>
+				<!-- end card -->
+
+				{% endfor %}
+
+			</div>
+
+		</div>
+
+	</div>
+	<!-- end catalog -->
+
+{% endblock %}
+
+
+	{% block footer %}
+		{% include "footer.html" %}
+	{% endblock %}

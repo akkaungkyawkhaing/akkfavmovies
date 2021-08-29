@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+
+     {% block title %} <title>Register</title> {% endblock %}
+
+
+{% block content %}
+<!-- start Register Form -->
+	<div class="sign section--bg" style="background-image: url({{ url_for('static', filename='img/section/section.jpg') }})">
+
+		<div class="container">
+
+			<div class="row">
+
+				<div class="col-12">
+
+					<div class="sign__content">
+
+						<!--{% for field, errors in form.errors.items() %}
+								<div class="alert alert-danger alert-dismissible fade show" role="alert">
+									{{ ', '.join(errors) }}
+									<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+						{% endfor %}-->
+
+						<!-- registration form -->
+						<form action="{{ url_for('register') }}" method="POST" enctype="multipart/form-data" class="sign__form">
+
+							{{ form.csrf_token }}
+
+							{% with messages = get_flashed_messages() %}
+								{% if messages %}
+									{% for message in messages %}
+										<p style="color: red"><b>{{ message }}</b></p>
+									{% endfor %}
+								{% endif %}
+							{% endwith %}
+
+							<a href="{{ url_for('index') }}" class="sign__logo">
+								<img src="static/img/logo.svg" alt="">
+							</a>
+
+							<div class="sign__group">
+								{{ form.name(class="sign__input", placeholder="Name") }}
+							</div>
+
+							<div class="sign__group">
+								{{ form.email(class="sign__input", placeholder="Email") }}
+							</div>
+
+							<div class="sign__group">
+								{{ form.password(class="sign__input", placeholder="Password") }}
+							</div>
+
+							<div class="sign__group">
+								{{ form.repeat_password(class="sign__input", placeholder="Repeat password") }}
+							</div>
+
+							<div class="sign__group sign__group--checkbox">
+								<input id="remember" name="remember" type="checkbox" checked="checked">
+								<label for="remember">I agree to the <a href="#">Privacy Policy</a></label>
+							</div>
+
+							<button class="sign__btn" type="submit">Register</button>
+
+							{% if not current_user.is_authenticated %}
+								<span class="sign__text">Already have an account? <a href="{{ url_for('login') }}">Log in!</a></span>
+							{% endif %}
+
+						</form>
+						<!-- registration form -->
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+<!-- end Register Form -->
+{% endblock %}
+
+
+	{% block footer %}
+		{% include 'footer.html' %}
+	{% endblock %}

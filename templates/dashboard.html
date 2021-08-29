@@ -1,0 +1,84 @@
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% extends 'base.html' %}
+
+
+    {% block title %} <title>AKK - Home</title> {% endblock %}
+
+	{% block header %}
+		{% include 'header.html' %}
+	{% endblock %}
+
+
+{% block content %}
+
+
+<!-- page title -->
+	<section class="home dashboard--bg2">
+
+		<div class="container">
+
+			<div class="row">
+
+				<div class="col-12">
+
+					<h1 class="home__title">Welcome Back! <b>{{ current_user.name }}</b></h1>
+
+					{% if current_user.is_authenticated %}
+						{% if current_user.id == 1 %}
+							<h3 class="" style="color: gray">Administrator</h3>
+						{% endif %}
+					{% endif %}
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</section>
+<!-- end page title -->
+
+
+{%- for message in get_flashed_messages() %}
+	 <div class = "alert alert-danger" style="margin:0 auto; display: flex; justify-content: center;">
+		<p style="color: green">{{ message }}</p>
+	 </div>
+{%- endfor %}
+
+
+<!-- search and results -->
+	<section class="section" style="margin-top: 25px;">
+
+		<div class="container">
+
+			<div class="row">
+
+				<div class="col-12" style="text-align: center;">
+
+					{{ form.csrf_token }}
+					<!-- search movie s-->
+					{{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+					<!-- end search movie s-->
+
+                        <br><br>
+
+                        {% if is_data: %}
+                            {% for movie in movie_data %}
+                              <p>
+                                <a href="{{ url_for('index', id=movie.id) }}"> {{ movie.title }} - {{ movie.release_date }}</a>
+                              </p>
+                            {% endfor %}
+                        {% endif %}
+
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- end search and results -->
+{% endblock %}
+
+
+	{% block footer %}
+		{% include "footer.html" %}
+	{% endblock %}

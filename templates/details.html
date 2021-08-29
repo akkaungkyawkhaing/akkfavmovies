@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+
+	{% block title %} <title>{{ movie_detail.title }}</title> {% endblock %}
+
+	{% block header %}
+		{% include 'header.html' %}
+	{% endblock %}
+
+
+{% block content %}
+
+<!-- start section -->
+	<section class="section details">
+
+		<!-- end details background -->
+		<div class="details__bg" style="background: url({{ img_url ~ movie_detail.backdrop_path }}) no-repeat center/cover;"></div>
+		<!-- end details background -->
+
+		<!-- details content -->
+		<div class="container">
+
+			<div class="row">
+
+				<!-- title -->
+				<div class="col-12">
+					<h1 class="details__title">{{ movie_detail.title }}</h1>
+				</div>
+				<!-- end title -->
+
+				<!-- content -->
+				<div class="col-12 col-xl-6">
+					<div class="card card--details card--series">
+						<div class="row">
+							<!-- card cover -->
+							<div class="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-5">
+								<div class="card__cover">
+									<img src="{{ img_url ~ movie_detail.poster_path }}" alt="">
+								</div>
+							</div>
+							<!-- end card cover -->
+
+							<!-- card content -->
+							<div class="col-12 col-sm-8 col-md-8 col-lg-9 col-xl-7">
+								<div class="card__content">
+									<div class="card__wrap">
+										<span class="card__rate"><i class="icon ion-ios-star"></i>{{ movie_detail.vote_average }}</span>
+
+										<ul class="card__list">
+											<li>{{ movie_detail.original_language | upper }}</li>
+										</ul>
+									</div>
+
+									<ul class="card__meta">
+										<li><span>Genre:</span>
+											{% if 'http' in movie_detail.poster_path %}
+												<a href="#">{{ movie_detail.genres }}</a>
+											{% else: %}
+												{% for genre in movie_detail.genres %}
+													<a href="#">{{ genre.name }}</a>
+												{% endfor %}
+											{% endif %}
+										<li><span>Release year:</span> {{ movie_detail.release_date }}</li>
+										<li><span>Running time:</span> {{ movie_detail.runtime }} min</li>
+										<li><span>Country:</span> <a href="#">USA</a> </li>
+									</ul>
+
+									<div class="card__description card__description--details">
+										<h4 style="color: white">Overview</h4>
+										{{ movie_detail.overview }}
+									</div>
+								</div>
+							</div>
+							<!-- end card content -->
+						</div>
+					</div>
+				</div>
+				<!-- end content -->
+
+				<!-- player -->
+				<div class="col-12 col-xl-6">
+					<div class="plyr__video-embed" id="player">
+						{% for video in videos %}
+							<iframe class="video"
+									src="{{ youtube_url ~ video.key }}"
+									allowfullscreen
+									allowtransparency
+							  ></iframe>
+						{% endfor %}
+					</div>
+				</div>
+				<!-- end player -->
+
+			</div>
+
+		</div>
+		<!-- end details content -->
+
+	</section>
+<!-- end details -->
+
+
+<!-- content -->
+	<section class="content">
+
+		<div class="content__head">
+
+			<div class="container">
+
+				<div class="row">
+
+					<div class="col-12">
+
+						<!-- content title -->
+						<h2 class="content__title">Backdrops</h2>
+						<!-- end content title -->
+
+						<!-- content tabs nav -->
+						<ul class="nav nav-tabs content__tabs" id="content__tabs" role="tablist">
+							<li class="nav-item">
+								<a class="nav-link active" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3" aria-selected="false">Photos</a>
+							</li>
+						</ul>
+						<!-- end content tabs nav -->
+
+						<!-- content mobile tabs nav -->
+						<div class="content__mobile-tabs" id="content__mobile-tabs">
+							<div class="content__mobile-tabs-btn dropdown-toggle" role="navigation" id="mobile-tabs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<input type="button" value="Photos">
+								<span></span>
+							</div>
+
+							<div class="content__mobile-tabs-menu dropdown-menu" aria-labelledby="mobile-tabs">
+								<ul class="nav nav-tabs" role="tablist">
+									<li class="nav-item"><a class="nav-link active" id="3-tab" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3" aria-selected="false">Photos</a></li>
+								</ul>
+							</div>
+						</div>
+						<!-- end content mobile tabs nav -->
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+
+
+		<div class="container">
+
+			<div class="row">
+
+				<div class="col-12 col-lg-8 col-xl-8">
+
+					<!-- content tabs -->
+					<div class="tab-content" id="myTabContent">
+
+						<div class="tab-pane fade show active" id="tab-3" role="tabpanel" aria-labelledby="3-tab">
+							<!-- project gallery -->
+							<div class="gallery" itemscope>
+								<div class="row">
+
+									{% for back_drop in back_drops %}
+									<!-- gallery item -->
+									<figure class="col-12 col-sm-6 col-xl-4" itemprop="associatedMedia" itemscope>
+										<a href="{{ img_url ~ back_drop.file_path }}" itemprop="contentUrl" data-size="1920x1280">
+											<img src="{{ img_url ~ back_drop.file_path }}" itemprop="thumbnail" alt="Image description" />
+										</a>
+										<figcaption itemprop="caption description">{{ movie_detail.title }}</figcaption>
+									</figure>
+									<!-- end gallery item -->
+									{% endfor %}
+
+								</div>
+							</div>
+							<!-- end project gallery -->
+						</div>
+					</div>
+					<!-- end content tabs -->
+				</div>
+
+			</div>
+
+		</div>
+
+	</section>
+<!-- end content -->
+
+
+
+{% endblock %}
+
+
+	{% block footer %}
+		{% include "footer.html" %}
+	{% endblock %}

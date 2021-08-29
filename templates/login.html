@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+
+     {% block title %} <title>Login</title> {% endblock %}
+
+
+{% block content %}
+<!-- start Login Form -->
+	<div class="sign login--bg section--bg" style="background: url({{ url_for('static', filename='img/section/section.jpg') }})">
+
+		<div class="container">
+
+			<div class="row">
+
+				<div class="col-12">
+
+					<div class="sign__content">
+						<!-- authorization form -->
+						<form action="{{ url_for('login') }}" class="sign__form" method="POST" enctype="multipart/form-data">
+
+							{{ form.csrf_token }}
+
+							{% with messages = get_flashed_messages() %}
+								{% if messages %}
+									{% for message in messages %}
+										<p style="color: red"><b>{{ message }}</b></p>
+									{% endfor %}
+								{% endif %}
+							{% endwith %}
+
+							<a href="{{ url_for('index') }}" class="sign__logo">
+								<img src="static/img/logo.svg" alt="">
+							</a>
+
+							<div class="sign__group">
+            					{{ form.email(class="sign__input", placeholder="Email") }}
+							</div>
+
+							<div class="sign__group">
+								{{ form.password(class="sign__input", placeholder="Password") }}
+							</div>
+
+							<div class="sign__group sign__group--checkbox">
+								<input id="remember" name="remember" type="checkbox" checked="checked">
+								<label for="remember">Remember Me</label>
+							</div>
+
+							<!--<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>-->
+
+							<button class="sign__btn" type="submit">Log in</button>
+
+							<!--{% if current_user.is_authenticated: %}
+								{% if current_user.id == 1 %}
+
+									<span class="sign__text">Don't have an account? <a href="{{ url_for('register') }}">Sign up!</a></span>
+
+								{% endif %}
+							{% endif %}-->
+
+							<!--<span class="sign__text">Don't have an account? <a href="{{ url_for('register') }}">Register!</a></span>-->
+
+						</form>
+						<!-- end authorization form -->
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+<!-- end Login Form -->
+{% endblock %}
+
+
+	{% block footer %}
+		{% include 'footer.html' %}
+	{% endblock %}

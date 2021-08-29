@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+
+
+    {% block title %} <title>AKK - Home</title> {% endblock %}
+
+	{% block header %}
+		{% include 'header.html' %}
+	{% endblock %}
+
+
+{% block content %}
+	<!-- home -->
+	<section class="home home--bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<h1 class="home__title">You cannot go back in time, but gravity and love can send messages back in time.</h1>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- end home -->
+
+
+	<!-- content -->
+	<section class="content">
+		<div class="content__head">
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<!-- content title -->
+<!--						<h2 class="content__title">New items</h2>-->
+						<!-- end content title -->
+
+						<!-- content tabs nav -->
+						<ul class="nav nav-tabs content__tabs" id="content__tabs" role="tablist">
+							<li class="nav-item">
+								<a class="nav-link active" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab-1" aria-selected="true">My Favorite</a>
+							</li>
+
+							<li class="nav-item">
+								<a class="nav-link" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab-2" aria-selected="false">Upcoming</a>
+							</li>
+
+							<li class="nav-item">
+								<a class="nav-link" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3" aria-selected="false">Popular</a>
+							</li>
+
+						</ul>
+						<!-- end content tabs nav -->
+
+						<!-- content mobile tabs nav -->
+						<div class="content__mobile-tabs" id="content__mobile-tabs">
+							<div class="content__mobile-tabs-btn dropdown-toggle" role="navigation" id="mobile-tabs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<input type="button" value="Dropdown">
+								<span></span>
+							</div>
+
+							<div class="content__mobile-tabs-menu dropdown-menu" aria-labelledby="mobile-tabs">
+								<ul class="nav nav-tabs" role="tablist">
+									<li class="nav-item"><a class="nav-link active" id="1-tab" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab-1" aria-selected="true">NEW RELEASES</a></li>
+
+									<li class="nav-item"><a class="nav-link" id="2-tab" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab-2" aria-selected="false">MOVIES</a></li>
+
+									<li class="nav-item"><a class="nav-link" id="3-tab" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab-3" aria-selected="false">TV SERIES</a></li>
+
+									<li class="nav-item"><a class="nav-link" id="4-tab" data-toggle="tab" href="#tab-4" role="tab" aria-controls="tab-4" aria-selected="false">CARTOONS</a></li>
+								</ul>
+							</div>
+						</div>
+						<!-- end content mobile tabs nav -->
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container">
+			<!-- content tabs -->
+			<div class="tab-content" id="myTabContent">
+				<div class="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="1-tab">
+					<div class="row">
+
+						{% for movie in all_movie %}
+						<!-- My Favorite -->
+						<div class="col-6 col-sm-12 col-lg-6">
+							<div class="card card--list">
+								<div class="row">
+									<div class="col-12 col-sm-4">
+										<div class="card__cover">
+											<img src="{{ img_url ~ movie.poster_path }}" alt="">
+											<a href="{{ url_for('details', id=movie.org_id) }}" class="card__play">
+												<i class="icon ion-ios-play"></i>
+											</a>
+										</div>
+									</div>
+
+									<div class="col-12 col-sm-8">
+										<div class="card__content">
+											<h3 class="card__title"><a href="{{ url_for('details', id=movie.org_id) }}">{{ movie.title }}</a></h3>
+											<span class="card__category">
+												<a href="{{ url_for('details', id=movie.org_id) }}">{{ movie.release_date }}</a>
+											</span>
+
+											<div class="card__wrap">
+												<span class="card__rate"><i class="icon ion-ios-star"></i>{{ movie.vote_average }}</span>
+											</div>
+
+											<div class="card__description">
+												<p>{{ movie.overview }}</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- end card -->
+						{% endfor %}
+
+					</div>
+				</div>
+
+				<div class="tab-pane fade" id="tab-2" role="tabpanel" aria-labelledby="2-tab">
+					<div class="row">
+
+						{% for movie in upcoming %}
+						<!-- card -->
+						<div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+							<div class="card">
+								<div class="card__cover">
+
+									<img src="{{ img_url ~ movie.poster_path }}" alt="">
+
+									<a href="{{ url_for('details', id=movie.id) }}" class="card__play">
+										<i class="icon ion-ios-play"></i>
+									</a>
+								</div>
+								<div class="card__content">
+									<h3 class="card__title"><a href="{{ url_for('details', id=movie.id) }}">{{ movie.title }}</a></h3>
+									<span class="card__category">
+
+										<a href="{{ url_for('details', id=movie.id) }}">{{  movie.release_date | datetime_format }}</a>
+									</span>
+									<span class="card__rate"><i class="icon ion-ios-star"></i>{{ movie.vote_average }}</span>
+								</div>
+							</div>
+						</div>
+						<!-- end card -->
+						{% endfor %}
+					</div>
+				</div>
+
+				<!-- Popular -->
+				<div class="tab-pane fade" id="tab-3" role="tabpanel" aria-labelledby="3-tab">
+					<div class="row">
+						{% for movie in popular %}
+						<!-- card -->
+						<div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+							<div class="card">
+								<div class="card__cover">
+
+									<img src="{{ img_url ~ movie.poster_path }}" alt="">
+
+									<a href="{{ url_for('details', id=movie.id) }}" class="card__play">
+										<i class="icon ion-ios-play"></i>
+									</a>
+								</div>
+								<div class="card__content">
+									<h3 class="card__title"><a href="{{ url_for('details', id=movie.id) }}">{{ movie.title }}</a></h3>
+									<span class="card__category">
+
+										<a href="{{ url_for('details', id=movie.id) }}">{{  movie.release_date | datetime_format }}</a>
+									</span>
+									<span class="card__rate"><i class="icon ion-ios-star"></i>{{ movie.vote_average }}</span>
+								</div>
+							</div>
+						</div>
+						<!-- end card -->
+						{% endfor %}
+					</div>
+				</div>
+
+			</div>
+			<!-- end content tabs -->
+		</div>
+	</section>
+	<!-- end content -->
+
+
+<!-- Now Playing -->
+	<section class="section section--bg" style="background-image: url({{ url_for('static', filename='img/section/section.jpg') }})">
+	<div class="container">
+		<div class="row">
+			<!-- section title -->
+			<div class="col-12">
+				<h2 class="section__title">Now Playing</h2>
+			</div>
+			<!-- end section title -->
+			{% for movie in now_playing %}
+			<!-- card -->
+			<div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+				<div class="card">
+							<div class="card__cover">
+
+								<img src="{{ img_url ~ movie.poster_path }}" alt="">
+
+								<a href="{{ url_for('details', id=movie.id) }}" class="card__play">
+									<i class="icon ion-ios-play"></i>
+								</a>
+							</div>
+							<div class="card__content">
+								<h3 class="card__title"><a href="{{ url_for('details', id=movie.id) }}">{{ movie.title }}</a></h3>
+								<span class="card__category">
+
+									<a href="{{ url_for('details', id=movie.id) }}">{{  movie.release_date|datetime_format }}</a>
+								</span>
+								<span class="card__rate"><i class="icon ion-ios-star"></i>{{ movie.vote_average }}</span>
+							</div>
+						</div>
+			</div>
+			<!-- end card -->
+			{% endfor %}
+
+		</div>
+	</div>
+</section>
+<!-- end expected premiere -->
+{% endblock %}
+
+
+	{% block footer %}
+		{% include "footer.html" %}
+	{% endblock %}
+
