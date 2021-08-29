@@ -202,10 +202,9 @@ def not_found(errmsg):
 @csrf.exempt
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    print(os.environ.get('SECRET_KEY'))
-    org_id = request.args.get('id')
     if request.method == 'GET':
-        if org_id is not None:
+        if request.args.get('id') is not None:
+            org_id = request.args.get('id')
             res = requests.get(url=f"{MOVIE_DB_INFO_URL}/{org_id}", params=params,
                                headers=headers).json()
             movie_data = Movie.query.filter_by(org_id=org_id).first()
