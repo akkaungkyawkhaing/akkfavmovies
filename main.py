@@ -26,7 +26,7 @@ MOVIE_DB_SEARCH_URL = "https://api.themoviedb.org/3/search/movie"
 MOVIE_DB_INFO_URL = "https://api.themoviedb.org/3/movie"
 MOVIE_DB_IMAGE_URL = "https://image.tmdb.org/t/p/original"
 YOUTUBE_URL = "https://www.youtube.com/embed/"
-MOVIE_DB_API_KEY = "c2eda136a81684281ac065a7c2d9813d"
+MOVIE_DB_API_KEY = os.environ.get('MOVIE_DB_API_KEY')
 ROWS_PER_PAGE = 24
 
 title_query = ""
@@ -50,15 +50,14 @@ secret_key_value_hex_encoded = binascii.hexlify(secret_key_value)
 
 csrf = CSRFProtect()
 app = Flask(__name__)
-app.config['SECRET_KEY'] = secret_key_value_hex_encoded
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///my_fav_movie.db'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = dt.timedelta(days=1)
 db = SQLAlchemy(app)
 # CSRFProtect(app)
 csrf.init_app(app)
 Bootstrap(app)
-
 # app.config.update(
 #     SESSION_COOKIE_SECURE=True,
 #     SESSION_COOKIE_HTTPONLY=True,
@@ -203,6 +202,7 @@ def not_found(errmsg):
 @csrf.exempt
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    print(os.environ.get('SECRET_KEY'))
     org_id = request.args.get('id')
     if request.method == 'GET':
         if org_id is not None:
