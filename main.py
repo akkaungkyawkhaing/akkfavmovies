@@ -51,7 +51,7 @@ secret_key_value_hex_encoded = binascii.hexlify(secret_key_value)
 csrf = CSRFProtect()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI", "sqlite:///blog.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI", "sqlite:///my_fav_movie.db")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = dt.timedelta(days=1)
 db = SQLAlchemy(app)
