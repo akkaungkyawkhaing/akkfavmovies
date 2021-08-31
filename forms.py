@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, validators
+from wtforms import StringField, SubmitField, PasswordField
 from wtforms.fields.html5 import EmailField
-from wtforms.validators import DataRequired, Length, EqualTo, Email, ValidationError
+from wtforms.validators import DataRequired, Length, EqualTo, Email
 
 
 class FindMovieForm(FlaskForm):

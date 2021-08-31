@@ -1,26 +1,18 @@
-import binascii
 import os
-from functools import wraps
+import random
+import binascii
+import requests
 import datetime as dt
 
-import random
-
-import requests
-from flask import Flask, render_template, url_for, redirect, flash, request, abort, make_response, send_file, session, \
-    jsonify
+from functools import wraps
+from flask import Flask, render_template, url_for, redirect, flash, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, LoginManager, login_user, current_user, logout_user, login_required
-from flask_wtf import FlaskForm
-from jinja2 import FileSystemLoader, Environment, select_autoescape
-from sqlalchemy.orm import relationship
+from flask_login import UserMixin, LoginManager, login_user, current_user, logout_user
+from jinja2 import select_autoescape
 from werkzeug.security import generate_password_hash, check_password_hash
-from wtforms import StringField, SubmitField, PasswordField
-from wtforms.fields.html5 import EmailField
-from wtforms.validators import DataRequired, InputRequired, EqualTo, ValidationError, Email
 from flask_bootstrap import Bootstrap
-from forms import FindMovieForm
 from flask_wtf.csrf import CSRFProtect, CSRFError
-from forms import LoginForm, RegisterForm
+from forms import LoginForm, RegisterForm, FindMovieForm
 
 MOVIE_DB_SEARCH_URL = "https://api.themoviedb.org/3/search/movie"
 MOVIE_DB_INFO_URL = "https://api.themoviedb.org/3/movie"
@@ -28,34 +20,46 @@ MOVIE_DB_IMAGE_URL = "https://image.tmdb.org/t/p/original"
 YOUTUBE_URL = "https://www.youtube.com/embed/"
 MOVIE_DB_API_KEY = os.environ.get('MOVIE_DB_API_KEY')
 ROWS_PER_PAGE = 24
-
 title_query = ""
 
 parameters = {
     "api_key": MOVIE_DB_API_KEY,
     "query": title_query
 }
-
 params = {
     'api_key': MOVIE_DB_API_KEY
 }
-
 headers = {"content-type": "text"}
 
-# Cookies Protection
-# Generates a random 24 bit string
-secret_key_value = os.urandom(24)
-# Create the hex-encoded string value.
-secret_key_value_hex_encoded = binascii.hexlify(secret_key_value)
+
+# Functions
+def generate_secret_key():
+    # Cookies Protection
+    # Generates a random 24 bit string
+    secret_key_value = os.urandom(24)
+    # Create the hex-encoded string value.
+    secret_key_value_hex_encoded = binascii.hexlify(secret_key_value)
+    return secret_key_value_hex_encoded
+
+
+def get_video_key(video_id: str) -> str:
+    get_videos = requests.get(url=f"{MOVIE_DB_INFO_URL}/{video_id}/videos", params=params, headers=headers)
+    return get_videos.json()['results'][:1]
+
+
+def random_number_fun(data: list) -> list:
+    _index = random.randint(1, len(data))
+    return data[_index - 1]['poster_path']
+
 
 csrf = CSRFProtect()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///my_fav_movie.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URI", "sqlite:///my_fav_movie.db")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = dt.timedelta(days=1)
 db = SQLAlchemy(app)
-# CSRFProtect(app)
 csrf.init_app(app)
 Bootstrap(app)
 # app.config.update(
@@ -103,15 +107,13 @@ def load_user(user_id):
 #     elif format == 'medium':
 #         format="EE dd.MM.y HH:mm"
 #     return babel.dates.format_datetime(value, format)
-#
-''''
-@app.template_filter('strftime')
-def _jinja2_filter_datetime(date, fmt=None):
-    date = dateutil.parser.parse(date)
-    native = date.replace(tzinfo=None)
-    format='%b %d, %Y'
-    return native.strftime(format)
-'''
+
+# @app.template_filter('strftime')
+# def _jinja2_filter_datetime(date, fmt=None):
+#     date = dateutil.parser.parse(date)
+#     native = date.replace(tzinfo=None)
+#     format = '%b %d, %Y'
+#     return native.strftime(format)
 
 
 @app.template_filter('datetime_format')
@@ -152,11 +154,6 @@ class Movie(db.Model):
 db.create_all()
 
 
-class FindMovieForm(FlaskForm):
-    movie_title = StringField('', validators=[DataRequired()])
-    submit = SubmitField('Search Movie')
-
-
 def insert_db(org_id, title, release_date, runtime, tagline, overview, vote_average, vote_count, genres,
               original_language, poster_path, backdrop_path):
     my_date = dt.datetime.strptime(release_date, "%Y-%m-%d").year
@@ -181,16 +178,6 @@ def admin_only(f):
     return decorated_function
 
 
-def get_video_key(video_id: str) -> str:
-    get_videos = requests.get(url=f"{MOVIE_DB_INFO_URL}/{video_id}/videos", params=params, headers=headers)
-    return get_videos.json()['results'][:1]
-
-
-def random_number_fun(data: list) -> list:
-    _index = random.randint(1, len(data))
-    return data[_index - 1]['poster_path']
-
-
 # app name
 @app.errorhandler(404)
 # inbuilt function which takes error as parameter
@@ -202,7 +189,6 @@ def not_found(errmsg):
 @csrf.exempt
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    print(os.environ.get('SECRET_KEY'))
     if request.method == 'GET':
         if request.args.get('id') is not None:
             org_id = request.args.get('id')
@@ -220,7 +206,6 @@ def index():
 
         # do for try catch
         # do for try catch
-        # all_movie = Movie.query.limit(6).all()
         all_movie = Movie.query.order_by(Movie.id.desc()).limit(6)
 
         res_upcoming = requests.get(url=f"{MOVIE_DB_INFO_URL}/upcoming", params=params, headers=headers)
@@ -384,7 +369,6 @@ def dashboard():
             movie_data = res.json()['results']
             return render_template('dashboard.html', form=form, current_user=current_user, is_data=True,
                                    movie_data=movie_data)
-    print('test')
     return render_template('dashboard.html', form=form, current_user=current_user)
 
 

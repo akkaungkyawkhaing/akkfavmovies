@@ -753,12 +753,34 @@ ul {
     content: '';
     z-index: 1;
     position: absolute;
+    display: block;
+    background: url("../img/home/home__bg2.jpg") no-repeat center/cover;
+    opacity: 0.06;
+}
+
+.upcoming--bg:before {
+    content: '';
+    z-index: 1;
+    position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
     display: block;
-    /*background: url("../img/home/home__bg2.jpg") no-repeat center/cover;*/
+    background: url("../img/home/home__bg3.jpg") no-repeat center/cover;
+    opacity: 0.06;
+}
+
+.popular--bg:before {
+    content: '';
+    z-index: 1;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: block;
+    background: url("../img/home/home__bg3.jpg") no-repeat center/cover;
     opacity: 0.06;
 }
 
