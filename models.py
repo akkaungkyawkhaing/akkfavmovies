@@ -29,13 +29,13 @@ class Movie(db.Model):
 
 
 # Generate marshmallow Schemas from your models
-class UsersShema(ma.Schema):
+class UsersSchema(ma.Schema):
     class Meta:
         # Fields to expose
         fields = ("id", "name", "email", "password")
 
 
-class MoviesShema(ma.Schema):
+class MoviesSchema(ma.Schema):
     class Meta:
         # Fields to expose
         fields = ("id", "org_id", "title", "release_date", "runtime", "tagline", "overview",
@@ -43,7 +43,7 @@ class MoviesShema(ma.Schema):
                   "backdrop_path")
 
 
-user_schema = UsersShema()
-users_schema = UsersShema(many=True)
-movie_schema = MoviesShema()
-movies_schema = MoviesShema(many=True)
+user_schema = UsersSchema()
+users_schema = UsersSchema(many=True)
+movie_schema = MoviesSchema()
+movies_schema = MoviesSchema(many=True)

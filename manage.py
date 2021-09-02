@@ -3,7 +3,7 @@
 def deploy():
     """Run deployment tasks."""
     from main import create_app, db
-    from flask_migrate import upgrade, migrate, init, stamp
+    from flask_migrate import upgrade, migrate, stamp
 
     main = create_app()
     main.app_context().push()
