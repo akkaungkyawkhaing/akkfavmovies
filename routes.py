@@ -11,7 +11,7 @@ from flask_login import login_user, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_wtf.csrf import CSRFError
 from forms import LoginForm, RegisterForm, FindMovieForm
-from models import User, Movie, movies_schema
+from models import User, Movie
 
 
 MOVIE_DB_SEARCH_URL = "https://api.themoviedb.org/3/search/movie"
