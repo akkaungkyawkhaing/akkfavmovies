@@ -256,7 +256,6 @@ def login():
         email = request.form.get("email")
         password = request.form.get("password")
         user = User.query.filter_by(email=email).first()
-        print(user)
         if not user:
             flash("Login failed, please try again!", 'error')
             return redirect(url_for('login'))
@@ -286,21 +285,21 @@ def dashboard():
             movie_data = res.json()['results']
             return render_template('dashboard.html', form=form, current_user=current_user, is_data=True,
                                    movie_data=movie_data)
-            
-    if request.method == 'GET':
-        if request.args.get('id') is not None:
-            org_id = request.args.get('id')
-            res = requests.get(url=f"{MOVIE_DB_INFO_URL}/{org_id}", params=params,
-                               headers=headers).json()
-            movie_data = Movie.query.filter_by(org_id=org_id).first()
-            if movie_data is None:
-                insert_db(org_id, res['title'], res['release_date'], res['runtime'], res['tagline'], res['overview'],
-                          res['vote_average'], res['vote_count'], res['genres'][0]['name'],
-                          res['original_language'], res['poster_path'], res['backdrop_path'])
-                flash(f"{res['title']} | successfully save")
-            else:
-                flash(f"This movie '{movie_data.title}' already exit!!")
+
+    if request.args.get('id') is not None:
+        org_id = request.args.get('id')
+        res = requests.get(url=f"{MOVIE_DB_INFO_URL}/{org_id}", params=params,
+                           headers=headers).json()
+        movie_data = Movie.query.filter_by(org_id=org_id).first()
+        if movie_data is None:
+            insert_db(org_id, res['title'], res['release_date'], res['runtime'], res['tagline'], res['overview'],
+                      res['vote_average'], res['vote_count'], res['genres'][0]['name'],
+                      res['original_language'], res['poster_path'], res['backdrop_path'])
+            flash(f"{res['title']} | successfully save")
+        else:
+            flash(f"This movie '{movie_data.title}' already exit!!")
         return redirect(url_for('dashboard'))
+
     return render_template('dashboard.html', form=form, current_user=current_user)
 
 
