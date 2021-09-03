@@ -9,7 +9,11 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
-
+    
+    # def __init__(self, name, email, password):
+    #     self.name = name
+    #     self.email = email
+    #     self.password = password
 
 class Movie(db.Model):
     __tablename__ = "movies"
@@ -43,7 +47,9 @@ class MoviesSchema(ma.Schema):
                   "backdrop_path")
 
 
+# init schema
 user_schema = UsersSchema()
 users_schema = UsersSchema(many=True)
+
 movie_schema = MoviesSchema()
 movies_schema = MoviesSchema(many=True)
