@@ -11,7 +11,7 @@ from flask_login import login_user, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_wtf.csrf import CSRFError
 from forms import LoginForm, RegisterForm, FindMovieForm
-from models import User, Movie
+from models import User, Movie, movies_schema
 
 
 MOVIE_DB_SEARCH_URL = "https://api.themoviedb.org/3/search/movie"
@@ -114,25 +114,10 @@ def random_number_fun(data: list) -> list:
 
 
 @csrf.exempt
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'], strict_slashes=False)
 def index():
     if request.method == 'GET':
-        if request.args.get('id') is not None:
-            org_id = request.args.get('id')
-            res = requests.get(url=f"{MOVIE_DB_INFO_URL}/{org_id}", params=params,
-                               headers=headers).json()
-            movie_data = Movie.query.filter_by(org_id=org_id).first()
-            if movie_data is None:
-                insert_db(org_id, res['title'], res['release_date'], res['runtime'], res['tagline'], res['overview'],
-                          res['vote_average'], res['vote_count'], res['genres'][0]['name'],
-                          res['original_language'], res['poster_path'], res['backdrop_path'])
-                flash(f"{res['title']} | successfully save")
-            else:
-                flash(f"This movie '{movie_data.title}' already exit!!")
-            return redirect(url_for('dashboard'))
-
-        # do for try catch
-        # do for try catch
+        # do for try catchsss
         all_movie = Movie.query.order_by(Movie.id.desc()).limit(6)
 
         res_upcoming = requests.get(url=f"{MOVIE_DB_INFO_URL}/upcoming", params=params, headers=headers)
@@ -153,11 +138,14 @@ def index():
 
 
 @csrf.exempt
-@app.route('/favorite', methods=['GET', 'POST'])
+@app.route('/favorite', methods=['GET'])
 def favorite():
     page = request.args.get('page', 1, type=int)
     if request.method == 'GET':
         all_movie = Movie.query.paginate(page=page, per_page=ROWS_PER_PAGE)
+        # print(type(all_movie))
+        # result = movies_schema.dump(all_movie.items)
+        # return jsonify(result) or jsonify(result.data)
         if len(all_movie.items) > 0:
             # _index = random.randint(1, len(all_movie.items))
             # random_backdrop_path = all_movie.items[_index - 1].backdrop_path
@@ -167,7 +155,7 @@ def favorite():
 
 
 @csrf.exempt
-@app.route('/upcoming', methods=['GET', 'POST'])
+@app.route('/upcoming', methods=['GET'])
 def upcoming():
     if request.method == 'GET':
         res_upcoming = requests.get(url=f"{MOVIE_DB_INFO_URL}/upcoming", params=params,
@@ -182,7 +170,7 @@ def upcoming():
 
 
 @csrf.exempt
-@app.route('/popular', methods=['GET', 'POST'])
+@app.route('/popular', methods=['GET'])
 def popular():
     if request.method == 'GET':
         res_popular = requests.get(url=f"{MOVIE_DB_INFO_URL}/popular", params=params, headers=headers)
@@ -196,7 +184,7 @@ def popular():
 
 
 @csrf.exempt
-@app.route('/details/<int:id>', methods=['GET', 'POST'])
+@app.route('/details/<int:id>', methods=['GET'])
 def details(id):
     if request.method == 'GET':
         if id is not None:
@@ -268,6 +256,7 @@ def login():
         email = request.form.get("email")
         password = request.form.get("password")
         user = User.query.filter_by(email=email).first()
+        print(user)
         if not user:
             flash("Login failed, please try again!", 'error')
             return redirect(url_for('login'))
@@ -288,14 +277,30 @@ def login():
 @admin_only
 def dashboard():
     form = FindMovieForm()
-    if form.validate_on_submit():
-        if request.method == 'POST':
+    
+    if request.method == 'POST':
+        if form.validate_on_submit():
             res = requests.get(url=MOVIE_DB_SEARCH_URL,
                                params={"api_key": MOVIE_DB_API_KEY, "query": request.form['movie_title']},
                                headers=headers)
             movie_data = res.json()['results']
             return render_template('dashboard.html', form=form, current_user=current_user, is_data=True,
                                    movie_data=movie_data)
+            
+    if request.method == 'GET':
+        if request.args.get('id') is not None:
+            org_id = request.args.get('id')
+            res = requests.get(url=f"{MOVIE_DB_INFO_URL}/{org_id}", params=params,
+                               headers=headers).json()
+            movie_data = Movie.query.filter_by(org_id=org_id).first()
+            if movie_data is None:
+                insert_db(org_id, res['title'], res['release_date'], res['runtime'], res['tagline'], res['overview'],
+                          res['vote_average'], res['vote_count'], res['genres'][0]['name'],
+                          res['original_language'], res['poster_path'], res['backdrop_path'])
+                flash(f"{res['title']} | successfully save")
+            else:
+                flash(f"This movie '{movie_data.title}' already exit!!")
+        return redirect(url_for('dashboard'))
     return render_template('dashboard.html', form=form, current_user=current_user)
 
 
