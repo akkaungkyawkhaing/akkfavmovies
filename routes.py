@@ -117,7 +117,7 @@ def random_number_fun(data: list) -> list:
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index():
     if request.method == 'GET':
-        # do for try catchsss
+        # do for try catch
         all_movie = Movie.query.order_by(Movie.id.desc()).limit(6)
 
         res_upcoming = requests.get(url=f"{MOVIE_DB_INFO_URL}/upcoming", params=params, headers=headers)
