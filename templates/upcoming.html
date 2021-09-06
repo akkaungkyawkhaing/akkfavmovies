@@ -81,7 +81,7 @@
 
 							<span class="card__category">
 
-								<a href="{{ url_for('details', id=movie.id) }}">{{ movie.release_date }} ({{ movie.original_language }})</a>
+								<a href="{{ url_for('details', id=movie.id) }}">{{ movie.release_date }} ({{ movie.original_language | upper }})</a>
 
 							</span>
 
