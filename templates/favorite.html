@@ -113,7 +113,7 @@
 						</li>
 
 					<!-- Loop through the number of pages to display a link for each -->
-					{% for page_num in all_movie.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+					{% for page_num in all_movie.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
 
 						{% if page_num %}
 							<!-- Check for the active page and set the link to "Active"-->
@@ -138,7 +138,7 @@
 							{% endif %}
 
 						{% else %}
-							...
+
 						{% endif %}
 
 					{% endfor %}

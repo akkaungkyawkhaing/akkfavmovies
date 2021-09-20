@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired, Length, EqualTo, Email
 
 class FindMovieForm(FlaskForm):
     movie_title = StringField('', validators=[DataRequired()])
-    submit = SubmitField('Search Movie')
+    # submit = SubmitField('search')
 
 
 class RegisterForm(FlaskForm):
