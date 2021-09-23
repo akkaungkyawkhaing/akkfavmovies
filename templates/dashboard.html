@@ -76,9 +76,11 @@
 
 						{% if is_data: %}
 						{% for movie in movie_data %}
-						  <p style="color:white">
-							<a href="{{ url_for('dashboard', id=movie.id) }}"></a>
-							   {{ movie.title }} - {{ movie.release_date }}
+						  <p>
+							<a href="{{ url_for('dashboard', id=movie.id) }}">
+								{{ movie.title }} - {{ movie.release_date }}
+							</a>
+
 						  </p>
 						{% endfor %}
 					{% endif %}
