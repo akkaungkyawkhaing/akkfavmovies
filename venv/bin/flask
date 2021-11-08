@@ -1,5 +1,5 @@
 #!/bin/sh
-'''exec' "/home/akk/python/My Project/akkfavmovies/venv/bin/python" "$0" "$@"
+'''exec' "/home/akk/python/My Project/akkfavmovies/venv/bin/python3" "$0" "$@"
 ' '''
 # -*- coding: utf-8 -*-
 import re
