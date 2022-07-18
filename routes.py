@@ -121,6 +121,7 @@ def index():
         all_movie = Movie.query.order_by(Movie.id.desc()).limit(6)
 
         res_upcoming = requests.get(url=f"{MOVIE_DB_INFO_URL}/upcoming", params=params, headers=headers)
+        print(res_upcoming)
         up_coming = res_upcoming.json()['results'][:12]
 
         res_popular = requests.get(url=f"{MOVIE_DB_INFO_URL}/popular", params=params, headers=headers)
