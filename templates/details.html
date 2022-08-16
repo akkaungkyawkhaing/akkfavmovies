@@ -60,7 +60,7 @@
 													<a href="#">{{ genre.name }}</a>
 												{% endfor %}
 											{% endif %}
-										<li><span>Release year:</span> {{ movie_detail.release_date }}</li>
+										<li><span>Release year:</span> {{ movie_detail.release_date | datetime_format }}</li>
 										<li><span>Running time:</span> {{ movie_detail.runtime }} min</li>
 										<li><span>Country:</span> <a href="#">USA</a> </li>
 									</ul>

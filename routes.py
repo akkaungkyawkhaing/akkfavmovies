@@ -37,7 +37,7 @@ app = create_app()
 
 def insert_db(org_id, title, release_date, runtime, tagline, overview, vote_average, vote_count, genres,
               original_language, poster_path, backdrop_path):
-    my_date = dt.datetime.strptime(release_date, "%d-%b-%Y").year
+    my_date = dt.datetime.strptime(release_date, "%Y-%m-%d").year
     url = f"{MOVIE_DB_IMAGE_URL}{poster_path}"
     my_movie = Movie(org_id=org_id, title=title, release_date=my_date, runtime=runtime, tagline=tagline,
                      overview=overview, vote_average=vote_average, ranking=vote_count, genres=genres,
@@ -66,7 +66,7 @@ def load_user(user_id):
 
 @app.template_filter('datetime_format')
 def datetime_format(value):
-    return dt.datetime.strptime(value, "%Y-%m-%d").strftime("%b %d, %Y")
+    return dt.datetime.strptime(value, "%Y-%m-%d").strftime("%d %b, %Y")
 
 
 # app name
