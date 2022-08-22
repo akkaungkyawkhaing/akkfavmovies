@@ -2,6 +2,7 @@ import os
 import datetime as dt
 
 from flask import Flask
+from flask_ipban import IpBan
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from jinja2 import select_autoescape
@@ -35,6 +36,8 @@ def create_app():
 
     # Initialize extensions
     db.init_app(app)
+    ip_ban = IpBan()
+    ip_ban.init_app(app)
     migrate.init_app(app, db)
     ma.init_app(app)
     cors.init_app(app)

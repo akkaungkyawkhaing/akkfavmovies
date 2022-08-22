@@ -1,4 +1,5 @@
 import os
+import json
 import random
 import binascii
 import requests
@@ -13,11 +14,11 @@ from flask_wtf.csrf import CSRFError
 from forms import LoginForm, RegisterForm, FindMovieForm
 from models import User, Movie
 
-
 MOVIE_DB_SEARCH_URL = "https://api.themoviedb.org/3/search/movie"
 MOVIE_DB_INFO_URL = "https://api.themoviedb.org/3/movie"
 MOVIE_DB_IMAGE_URL = "https://image.tmdb.org/t/p/original"
 YOUTUBE_URL = "https://www.youtube.com/embed/"
+GEOLOCATION_DB_URL = "https://geolocation-db.com/jsonp/"
 MOVIE_DB_API_KEY = os.environ.get('MOVIE_DB_API_KEY')
 ROWS_PER_PAGE = 24
 title_query = ""
@@ -111,6 +112,47 @@ def get_video_key(video_id: str) -> str:
 def random_number_fun(data: list) -> list:
     _index = random.randint(1, len(data))
     return data[_index - 1]['poster_path']
+
+
+ip_ban_list = ['127.0.0.1']
+current_date = dt.datetime.now()
+count_nums = 0
+country_code = ""
+
+
+@app.before_request
+def block_method():
+    ip = request.environ.get('REMOTE_ADDR')
+    # if ip in ip_ban_list:
+    #     abort(403)
+    any_function()
+    try:
+        if count_nums == 1:
+            file = open("data.txt", "a")
+            file.write(ip + " " + str(current_date) + "\n")
+            file.close()
+    except FileNotFoundError:
+        file = open("data.txt", "w")
+        file.write(ip + " " + str(current_date) + "\n")
+        file.close()
+    geolocation_get(ip)
+
+
+def any_function():
+    global count_nums
+    count_nums += 1
+
+
+def geolocation_get(ip_address):
+    request_url = GEOLOCATION_DB_URL + ip_address
+    response = requests.get(request_url)
+    result = response.content.decode()
+    result = result.split("(")[1].strip(")")
+    result = json.loads(result)
+    block_country = result[country_code]
+    if block_country == "PL":
+        # if ip_address in ip_ban_list:
+        abort(403)
 
 
 @csrf.exempt
@@ -277,7 +319,7 @@ def login():
 @admin_only
 def dashboard():
     form = FindMovieForm()
-    
+
     if request.method == 'POST':
         if form.validate_on_submit():
             res = requests.get(url=MOVIE_DB_SEARCH_URL,
