@@ -70,6 +70,13 @@ def datetime_format(value):
     return dt.datetime.strptime(value, "%Y-%m-%d").strftime("%d %b, %Y")
 
 
+@app.template_filter('decimal_places')
+def cut_decimal(value):
+    res = "{:.1f}".format(value)
+    print(res)
+    return res
+
+
 # app name
 @app.errorhandler(404)
 # inbuilt function which takes error as parameter
@@ -131,11 +138,12 @@ def block_method():
             file = open("data.txt", "a")
             file.write(ip + " " + str(current_date) + "\n")
             file.close()
+            geolocation_get(ip)
     except FileNotFoundError:
         file = open("data.txt", "w")
         file.write(ip + " " + str(current_date) + "\n")
         file.close()
-    geolocation_get(ip)
+        geolocation_get(ip)
 
 
 def any_function():
@@ -149,7 +157,8 @@ def geolocation_get(ip_address):
     result = response.content.decode()
     result = result.split("(")[1].strip(")")
     result = json.loads(result)
-    block_country = result[country_code]
+    block_country = result['country_code']
+    print(block_country)
     if block_country == "PL":
         # if ip_address in ip_ban_list:
         abort(403)

@@ -103,7 +103,7 @@
 											</span>
 
 											<div class="card__wrap">
-												<span class="card__rate"><i class="icon ion-ios-star"></i>{{ movie.vote_average }}</span>
+												<span class="card__rate"><i class="icon ion-ios-star"></i>{{ movie.vote_average | decimal_places }}</span>
 											</div>
 
 											<div class="card__description">
@@ -141,7 +141,7 @@
 
 										<a href="{{ url_for('details', id=movie.id) }}">{{  movie.release_date | datetime_format }}</a>
 									</span>
-									<span class="card__rate"><i class="icon ion-ios-star"></i>{{ movie.vote_average }}</span>
+									<span class="card__rate"><i class="icon ion-ios-star"></i>{{ movie.vote_average | decimal_places }}</span>
 								</div>
 							</div>
 						</div>
@@ -172,7 +172,7 @@
 
 										<a href="{{ url_for('details', id=movie.id) }}">{{  movie.release_date | datetime_format }}</a>
 									</span>
-									<span class="card__rate"><i class="icon ion-ios-star"></i>{{ movie.vote_average }}</span>
+									<span class="card__rate"><i class="icon ion-ios-star"></i>{{ movie.vote_average | decimal_places }}</span>
 								</div>
 							</div>
 						</div>
