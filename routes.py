@@ -132,17 +132,16 @@ def block_method():
     # if ip in ip_ban_list:
     #     abort(403)
     any_function()
+    geolocation_get(ip)
     try:
         if count_nums == 1:
             file = open("data.txt", "a")
             file.write(ip + " " + str(current_date) + "\n")
             file.close()
-            geolocation_get(ip)
     except FileNotFoundError:
         file = open("data.txt", "w")
         file.write(ip + " " + str(current_date) + "\n")
         file.close()
-        geolocation_get(ip)
 
 
 def any_function():
