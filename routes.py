@@ -159,7 +159,7 @@ def geolocation_get(ip_address):
     result = json.loads(result)
     block_country = result['country_code']
     # if str(block_country) == "MM":
-    if '103.217.156.151' == '103.217.156.151':
+    if block_country == 'MM':
         # if ip_address in ip_ban_list:
         abort(403)
 
