@@ -73,7 +73,6 @@ def datetime_format(value):
 @app.template_filter('decimal_places')
 def cut_decimal(value):
     res = "{:.1f}".format(value)
-    print(res)
     return res
 
 
@@ -158,8 +157,7 @@ def geolocation_get(ip_address):
     result = result.split("(")[1].strip(")")
     result = json.loads(result)
     block_country = result['country_code']
-    print(block_country)
-    if block_country == "PL":
+    if block_country == "MM":
         # if ip_address in ip_ban_list:
         abort(403)
 
@@ -176,7 +174,7 @@ def index():
         up_coming = res_upcoming.json()['results'][:12]
 
         res_popular = requests.get(url=f"{MOVIE_DB_INFO_URL}/popular", params=params, headers=headers)
-        popular = res_popular.json()['results'][:12]
+        popular_movie = res_popular.json()['results'][:12]
 
         res_now_playing = requests.get(url=f"{MOVIE_DB_INFO_URL}/now_playing", params=params, headers=headers)
         now_playing = res_now_playing.json()['results'][:6]
@@ -186,7 +184,7 @@ def index():
         # with open("upcoming.json", mode="w") as file:
         #     file.write(jsonString)
         return render_template('index.html', current_user=current_user, all_movie=all_movie, upcoming=up_coming,
-                               popular=popular, now_playing=now_playing, img_url=MOVIE_DB_IMAGE_URL)
+                               popular=popular_movie, now_playing=now_playing, img_url=MOVIE_DB_IMAGE_URL)
 
 
 @csrf.exempt
@@ -237,13 +235,13 @@ def popular():
 
 @csrf.exempt
 @app.route('/details/<int:id>', methods=['GET'])
-def details(id):
+def details(movie_id):
     if request.method == 'GET':
         if id is not None:
-            res_detail = requests.get(url=f"{MOVIE_DB_INFO_URL}/{id}", params=params, headers=headers)
+            res_detail = requests.get(url=f"{MOVIE_DB_INFO_URL}/{movie_id}", params=params, headers=headers)
             detail = res_detail.json()
-            videos = get_video_key(id)
-            get_img = requests.get(url=f"{MOVIE_DB_INFO_URL}/{id}/images", params=params, headers=headers)
+            videos = get_video_key(movie_id)
+            get_img = requests.get(url=f"{MOVIE_DB_INFO_URL}/{movie_id}/images", params=params, headers=headers)
             backdrops = get_img.json()['backdrops'][:6]
             return render_template('details.html', movie_detail=detail, img_url=MOVIE_DB_IMAGE_URL, videos=videos,
                                    back_drops=backdrops, youtube_url=YOUTUBE_URL)
