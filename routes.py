@@ -138,12 +138,12 @@ def block_method():
             file = open("data.txt", "a")
             file.write(ip + " " + str(current_date) + "\n")
             file.close()
-            geolocation_get(ip)
+            # geolocation_get(ip)
     except FileNotFoundError:
         file = open("data.txt", "w")
         file.write(ip + " " + str(current_date) + "\n")
         file.close()
-        geolocation_get(ip)
+        # geolocation_get(ip)
 
 
 def any_function():
@@ -158,8 +158,7 @@ def geolocation_get(ip_address):
     result = result.split("(")[1].strip(")")
     result = json.loads(result)
     block_country = result['country_code']
-    # if str(block_country) == "MM":
-    if block_country == 'MM':
+    if str(block_country) == 'MM':
         # if ip_address in ip_ban_list:
         abort(403)
 
@@ -237,13 +236,13 @@ def popular():
 
 @csrf.exempt
 @app.route('/details/<int:id>', methods=['GET'])
-def details(movie_id):
+def details(id):
     if request.method == 'GET':
         if id is not None:
-            res_detail = requests.get(url=f"{MOVIE_DB_INFO_URL}/{movie_id}", params=params, headers=headers)
+            res_detail = requests.get(url=f"{MOVIE_DB_INFO_URL}/{id}", params=params, headers=headers)
             detail = res_detail.json()
-            videos = get_video_key(movie_id)
-            get_img = requests.get(url=f"{MOVIE_DB_INFO_URL}/{movie_id}/images", params=params, headers=headers)
+            videos = get_video_key(id)
+            get_img = requests.get(url=f"{MOVIE_DB_INFO_URL}/{id}/images", params=params, headers=headers)
             backdrops = get_img.json()['backdrops'][:6]
             return render_template('details.html', movie_detail=detail, img_url=MOVIE_DB_IMAGE_URL, videos=videos,
                                    back_drops=backdrops, youtube_url=YOUTUBE_URL)
