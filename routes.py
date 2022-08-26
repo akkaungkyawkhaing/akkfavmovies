@@ -158,7 +158,7 @@ def geolocation_get(ip_address):
     result = result.split("(")[1].strip(")")
     result = json.loads(result)
     block_country = result['country_code']
-    if str(block_country) == 'UK':
+    if str(block_country) == 'MM':
         # if ip_address in ip_ban_list:
         abort(403)
 
@@ -167,7 +167,7 @@ def geolocation_get(ip_address):
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index():
     ip = request.remote_addr
-    geolocation_get(ip)
+    # geolocation_get(ip)
     if request.method == 'GET':
         # do for try catch
         all_movie = Movie.query.order_by(Movie.id.desc()).limit(6)
