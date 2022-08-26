@@ -166,6 +166,8 @@ def geolocation_get(ip_address):
 @csrf.exempt
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index():
+    ip = request.remote_addr
+    geolocation_get(ip)
     if request.method == 'GET':
         # do for try catch
         all_movie = Movie.query.order_by(Movie.id.desc()).limit(6)
