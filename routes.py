@@ -158,7 +158,7 @@ def geolocation_get(ip_address):
     result = result.split("(")[1].strip(")")
     result = json.loads(result)
     block_country = result['country_code']
-    if str(block_country) == 'MM':
+    if str(block_country) == 'UK':
         # if ip_address in ip_ban_list:
         abort(403)
 
