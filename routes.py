@@ -166,9 +166,16 @@ def geolocation_get(ip_address):
 @csrf.exempt
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index():
+    ip2 = request.environ.get('REMOTE_ADDR')
     ip = request.remote_addr
+    ip3 = request.environ['HTTP_X_FORWARDED_FOR']
+    ip4 = request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr)
     geolocation_get(ip)
-    print('This is ipaddress' + ip)
+    print('This is ipaddress 1' + ip)
+    print('This is ipaddress 2' + ip2)
+    print('This is ipaddress 3' + ip3)
+    print('This is ipaddress 4' + ip4)
+
     if request.method == 'GET':
         # do for try catch
         all_movie = Movie.query.order_by(Movie.id.desc()).limit(6)
