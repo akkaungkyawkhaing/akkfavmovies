@@ -123,27 +123,22 @@ def random_number_fun(data: list) -> list:
 ip_ban_list = ['127.0.0.1']
 current_date = dt.datetime.now()
 count_nums = 0
-country_code = ""
+ip = request.environ['HTTP_X_FORWARDED_FOR']
 
 
 @app.before_request
 def block_method():
-    # ip = request.remote_addr
-    ip = request.environ['HTTP_X_FORWARDED_FOR']
-    # if ip in ip_ban_list:
-    #     abort(403)
+
     any_function()
     try:
         if count_nums == 1:
             file = open("data.txt", "a")
             file.write(ip + " " + str(current_date) + "\n")
             file.close()
-            geolocation_get(ip)
     except FileNotFoundError:
         file = open("data.txt", "w")
         file.write(ip + " " + str(current_date) + "\n")
         file.close()
-        geolocation_get(ip)
 
 
 def any_function():
@@ -171,7 +166,7 @@ def index():
     # ip3 = request.environ['HTTP_X_FORWARDED_FOR'] work
     # ip4 = request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr) work
     # geolocation_get(ip)
-
+    geolocation_get(ip)
     if request.method == 'GET':
         # do for try catch
         all_movie = Movie.query.order_by(Movie.id.desc()).limit(6)
@@ -197,6 +192,7 @@ def index():
 @csrf.exempt
 @app.route('/favorite', methods=['GET'])
 def favorite():
+    geolocation_get(ip)
     page = request.args.get('page', 1, type=int)
     if request.method == 'GET':
         all_movie = Movie.query.paginate(page=page, per_page=ROWS_PER_PAGE)
@@ -214,6 +210,7 @@ def favorite():
 @csrf.exempt
 @app.route('/upcoming', methods=['GET'])
 def upcoming():
+    geolocation_get(ip)
     if request.method == 'GET':
         res_upcoming = requests.get(url=f"{MOVIE_DB_INFO_URL}/upcoming", params=params,
                                     headers=headers)
@@ -229,6 +226,7 @@ def upcoming():
 @csrf.exempt
 @app.route('/popular', methods=['GET'])
 def popular():
+    geolocation_get(ip)
     if request.method == 'GET':
         res_popular = requests.get(url=f"{MOVIE_DB_INFO_URL}/popular", params=params, headers=headers)
         populars = res_popular.json()['results']
@@ -243,6 +241,7 @@ def popular():
 @csrf.exempt
 @app.route('/details/<int:id>', methods=['GET'])
 def details(id):
+    geolocation_get(ip)
     if request.method == 'GET':
         if id is not None:
             res_detail = requests.get(url=f"{MOVIE_DB_INFO_URL}/{id}", params=params, headers=headers)
@@ -259,6 +258,7 @@ def details(id):
 @app.route('/register', methods=['GET', 'POST'])
 @admin_only
 def register():
+    geolocation_get(ip)
     form = RegisterForm()
     # if current_user.is_authenticated:
     #     if current_user.id == 1:
@@ -303,6 +303,7 @@ def register():
 @csrf.exempt
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    geolocation_get(ip)
     form = LoginForm()
     if current_user.is_authenticated:
         if current_user.id == 1:
@@ -332,8 +333,8 @@ def login():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @admin_only
 def dashboard():
+    geolocation_get(ip)
     form = FindMovieForm()
-
     if request.method == 'POST':
         if form.validate_on_submit():
             res = requests.get(url=MOVIE_DB_SEARCH_URL,
