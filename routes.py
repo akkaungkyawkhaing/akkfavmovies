@@ -162,7 +162,7 @@ def geolocation_get(ip_address):
     block_country = result['country_code']
     # if (str(block_country) == 'UK') or (str(block_country) == 'GB'):
         # if ip_address in ip_ban_list:
-    if str(block_country) == 'UU':
+    if str(block_country) == 'MM':
         abort(403)
 
 
