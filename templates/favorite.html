@@ -102,13 +102,11 @@
 					<ul class="paginator">
 
 						<li class="paginator__item paginator__item--prev">
-
-							<a href="{{ url_for('favorite', page=all_movie.prev_num) }}">
-									<i class="icon ion-ios-arrow-back
-									{% if all_movie.page == 1 %}
-									disabled
-									{% endif %}"></i>
-							</a>
+							{% if all_movie.page != 1 %}
+								<a href="{{ url_for('favorite', page=all_movie.prev_num) }}">
+									<i class="icon ion-ios-arrow-back disabled"></i>
+								</a>
+							{% endif %}
 
 						</li>
 

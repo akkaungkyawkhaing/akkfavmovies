@@ -5,6 +5,8 @@ import binascii
 import requests
 import datetime as dt
 
+from sqlalchemy import desc
+
 from main import create_app, db, login_manager, csrf
 from functools import wraps
 from flask import render_template, url_for, redirect, flash, request, abort, jsonify
@@ -125,9 +127,9 @@ current_date = dt.datetime.now()
 count_nums = 0
 
 
-@app.before_request
-def block_method():
-    b_ip = request.remote_addr
+# @app.before_request
+# def block_method():
+    # b_ip = request.remote_addr
     # get_ip = request.environ['HTTP_X_FORWARDED_FOR']
     # any_function()
     # try:
@@ -141,11 +143,11 @@ def block_method():
     #     file.close()
 
 
-def block_ip():
-    get_ip = request.remote_addr
-    if str(get_ip) != '127.0.0.1':
-        get_block_ip = request.environ['HTTP_X_FORWARDED_FOR']
-        geolocation_get(get_block_ip)
+# def block_ip():
+#     get_ip = request.remote_addr
+#     if str(get_ip) != '127.0.0.1':
+#         get_block_ip = request.environ['HTTP_X_FORWARDED_FOR']
+#         geolocation_get(get_block_ip)
 
 
 def any_function():
@@ -173,7 +175,7 @@ def index():
     # ip3 = request.environ['HTTP_X_FORWARDED_FOR'] work
     # ip4 = request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr) work
     # geolocation_get(ip)
-    block_ip()
+    # block_ip()
     if request.method == 'GET':
         # do for try catch
         all_movie = Movie.query.order_by(Movie.id.desc()).limit(6)
@@ -199,11 +201,11 @@ def index():
 @csrf.exempt
 @app.route('/favorite', methods=['GET'])
 def favorite():
-    block_ip()
+    # block_ip()
     page = request.args.get('page', 1, type=int)
     if request.method == 'GET':
-        all_movie = Movie.query.paginate(page=page, per_page=ROWS_PER_PAGE)
-        # print(type(all_movie))
+        all_movie = Movie.query.order_by(desc(Movie.id)).paginate(page=page, per_page=ROWS_PER_PAGE)
+        # all_movie = Movie.query.paginate(page=page, per_page=ROWS_PER_PAGE)
         # result = movies_schema.dump(all_movie.items)
         # return jsonify(result) or jsonify(result.data)
         if len(all_movie.items) > 0:
@@ -217,7 +219,7 @@ def favorite():
 @csrf.exempt
 @app.route('/upcoming', methods=['GET'])
 def upcoming():
-    block_ip()
+    # block_ip()
     if request.method == 'GET':
         res_upcoming = requests.get(url=f"{MOVIE_DB_INFO_URL}/upcoming", params=params,
                                     headers=headers)
@@ -233,7 +235,7 @@ def upcoming():
 @csrf.exempt
 @app.route('/popular', methods=['GET'])
 def popular():
-    block_ip()
+    # block_ip()
     if request.method == 'GET':
         res_popular = requests.get(url=f"{MOVIE_DB_INFO_URL}/popular", params=params, headers=headers)
         populars = res_popular.json()['results']
@@ -248,7 +250,7 @@ def popular():
 @csrf.exempt
 @app.route('/details/<int:id>', methods=['GET'])
 def details(id):
-    block_ip()
+    # block_ip()
     if request.method == 'GET':
         if id is not None:
             res_detail = requests.get(url=f"{MOVIE_DB_INFO_URL}/{id}", params=params, headers=headers)
@@ -265,7 +267,7 @@ def details(id):
 @app.route('/register', methods=['GET', 'POST'])
 @admin_only
 def register():
-    block_ip()
+    # block_ip()
     form = RegisterForm()
     # if current_user.is_authenticated:
     #     if current_user.id == 1:
@@ -310,7 +312,7 @@ def register():
 @csrf.exempt
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    block_ip()
+    # block_ip()
     form = LoginForm()
     if current_user.is_authenticated:
         if current_user.id == 1:
@@ -340,7 +342,7 @@ def login():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @admin_only
 def dashboard():
-    block_ip()
+    # block_ip()
     form = FindMovieForm()
     if request.method == 'POST':
         if form.validate_on_submit():
