@@ -1,6 +1,6 @@
 # 🎬 Favorite Movies Web Application  
 
-A simple yet elegant web application built with the Flask framework to manage and showcase your favorite movies.  
+Built a Flask-based web application to manage a personal list of favorite movies.
 
 ## 🌟 Features  
 - **User-Friendly Design:** Clean and intuitive interfaces built using HTML templates and static styles.  
